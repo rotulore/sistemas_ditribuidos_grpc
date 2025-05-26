@@ -6,10 +6,17 @@ option csharp_namespace = "TrainerApi";
 import "google/protobuf/timestamp.proto";
 
 service TrainerService {
-    rpc GetTrainer (TrainerByIdRequest) returns (TrainerResponse);
-    rpc CreateTrainer (CreateTrainerRequest) returns (TrainerResponse);
+    rpc GetTrainer (TrainerByIdRequest) returns (TrainerResponse);//Este es get unary
 
-    rpc CreateManyTrainers (stream CreateTrainerRequest) returns (CreateManyResponse);
+    rpc CreateTrainer (CreateTrainerRequest) returns (TrainerResponse);//Es un create pero usando unary
+
+    rpc CreateManyTrainers (stream CreateTrainerRequest) returns (CreateManyResponse);//Este es el Create que se pide en la tarea usando streaming del cliente
+
+    rpc GetTrainersByName(GetTrainersByNameRequest) returns (stream TrainerResponse);//Aqui se usa el streaming server
+}
+
+message GetTrainersByNameRequest{
+    string name=1;
 }
 
 message CreateManyResponse {

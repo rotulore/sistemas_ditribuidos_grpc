@@ -77,6 +77,20 @@ class TrainerServiceServicer(trainer_pb2_grpc.TrainerServiceServicer):
             trainers=responses
     )
 
+    def GetTrainersByName(self, request, context):
+        docs = repo.get_by_name(request.name)
+        for doc in docs:
+            ts_birth   = Timestamp();   ts_birth.FromDatetime(doc["birthdate"])
+            ts_created = Timestamp();   ts_created.FromDatetime(doc["created_at"])
+            yield trainer_pb2.TrainerResponse(
+                id=str(doc["_id"]),
+                name=doc["name"],
+                age=doc["age"],
+                birthdate=ts_birth,
+                medals=[trainer_pb2.Medals(region=m["region"], type=m["type"]) for m in doc.get("medals", [])],
+                created_at=ts_created
+            )
+
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

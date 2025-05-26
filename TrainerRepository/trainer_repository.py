@@ -15,3 +15,11 @@ class TrainerRepository:
         result = self.collection.insert_one(data)
         data["_id"] = result.inserted_id
         return data
+
+    
+    def get_by_name(self, name):
+        # Retorna lista de docs cuyo "name" contiene la subcadena (case-insensitive)
+        cursor = self.collection.find({
+            "name": {"$regex": name, "$options": "i"}
+        })
+        return list(cursor)
