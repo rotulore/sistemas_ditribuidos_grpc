@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  python-api:
+    build: .
+    ports:
+      - "50051:50051"
+    environment:
+      - MONGO_CONNECTION_STRING=mongodb://admin:password@mongodb:27017
+      - MONGO_DB_NAME=pokedex
+      - MONGO_COLLECTION=Trainers
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    ports:
+      - "27019:27017"
